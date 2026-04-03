@@ -532,12 +532,6 @@ export default function App() {
                 <ArrowUpRight size={20} />
               </motion.a>
             </motion.div>
-
-            <div className="mt-12 text-center md:hidden">
-              <a href="#" className="inline-flex items-center gap-2 font-medium hover:text-brand-accent transition-colors">
-                View All Projects <ArrowRight size={18} />
-              </a>
-            </div>
           </motion.div>
         </section>
 
