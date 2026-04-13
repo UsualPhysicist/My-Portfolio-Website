@@ -7,6 +7,7 @@ import PrintEditorialPage from './components/PrintEditorialPage';
 import SocialMediaPage from './components/SocialMediaPage';
 import SocialMediaThumbnail from './components/SocialMediaThumbnail';
 import PrintEditorialThumbnail from './components/PrintEditorialThumbnail';
+import PageLoader from './components/PageLoader';
 
 const NAV_LINKS = [
   { name: 'Home', href: '#home' },
@@ -43,6 +44,7 @@ export default function App() {
   const [productDesignView, setProductDesignView] = useState(false);
   const [printEditorialView, setPrintEditorialView] = useState(false);
   const [socialMediaView, setSocialMediaView] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -81,6 +83,23 @@ export default function App() {
   }, [isDarkMode]);
 
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
+
+  const handlePageSwitch = (viewSetter: (val: any) => void, value: any, isBack: boolean = false) => {
+    setIsLoading(true);
+    setTimeout(() => {
+      viewSetter(value);
+      if (!isBack) {
+        window.scrollTo(0, 0);
+      } else {
+        setTimeout(() => {
+          window.scrollTo(0, scrollPosRef.current);
+        }, 0);
+      }
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 800);
+    }, 1000);
+  };
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -129,43 +148,54 @@ export default function App() {
   };
 
   if (legalView) {
-    return <LegalPage type={legalView} onBack={() => {
-      setLegalView(null);
-      setTimeout(() => {
-        window.scrollTo(0, scrollPosRef.current);
-      }, 0);
-    }} />;
+    return (
+      <>
+        <AnimatePresence>
+          {isLoading && <PageLoader />}
+        </AnimatePresence>
+        <LegalPage type={legalView} onBack={() => handlePageSwitch(setLegalView, null, true)} />
+      </>
+    );
   }
 
   if (productDesignView) {
-    return <ProductDesignPage onBack={() => {
-      setProductDesignView(false);
-      setTimeout(() => {
-        window.scrollTo(0, scrollPosRef.current);
-      }, 0);
-    }} />;
+    return (
+      <>
+        <AnimatePresence>
+          {isLoading && <PageLoader />}
+        </AnimatePresence>
+        <ProductDesignPage onBack={() => handlePageSwitch(setProductDesignView, false, true)} />
+      </>
+    );
   }
 
   if (printEditorialView) {
-    return <PrintEditorialPage onBack={() => {
-      setPrintEditorialView(false);
-      setTimeout(() => {
-        window.scrollTo(0, scrollPosRef.current);
-      }, 0);
-    }} />;
+    return (
+      <>
+        <AnimatePresence>
+          {isLoading && <PageLoader />}
+        </AnimatePresence>
+        <PrintEditorialPage onBack={() => handlePageSwitch(setPrintEditorialView, false, true)} />
+      </>
+    );
   }
 
   if (socialMediaView) {
-    return <SocialMediaPage onBack={() => {
-      setSocialMediaView(false);
-      setTimeout(() => {
-        window.scrollTo(0, scrollPosRef.current);
-      }, 0);
-    }} />;
+    return (
+      <>
+        <AnimatePresence>
+          {isLoading && <PageLoader />}
+        </AnimatePresence>
+        <SocialMediaPage onBack={() => handlePageSwitch(setSocialMediaView, false, true)} />
+      </>
+    );
   }
 
   return (
     <div className="min-h-screen bg-brand-bg text-brand-primary font-sans selection:bg-brand-accent selection:text-white">
+      <AnimatePresence>
+        {isLoading && <PageLoader />}
+      </AnimatePresence>
       {/* Scroll Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-brand-accent z-[60] origin-left"
@@ -444,15 +474,15 @@ export default function App() {
                     if (project.title === 'Product Design') {
                       e.preventDefault();
                       scrollPosRef.current = window.scrollY;
-                      setProductDesignView(true);
+                      handlePageSwitch(setProductDesignView, true);
                     } else if (project.title === 'Print & Editorial') {
                       e.preventDefault();
                       scrollPosRef.current = window.scrollY;
-                      setPrintEditorialView(true);
+                      handlePageSwitch(setPrintEditorialView, true);
                     } else if (project.title === 'Social Media Designs') {
                       e.preventDefault();
                       scrollPosRef.current = window.scrollY;
-                      setSocialMediaView(true);
+                      handlePageSwitch(setSocialMediaView, true);
                     }
                   }}
                   key={project.id}
@@ -693,8 +723,7 @@ export default function App() {
               <button 
                 onClick={() => {
                   scrollPosRef.current = window.scrollY;
-                  setLegalView('privacy');
-                  window.scrollTo(0, 0);
+                  handlePageSwitch(setLegalView, 'privacy');
                 }} 
                 className="hover:text-brand-bg transition-colors cursor-pointer"
               >
@@ -703,8 +732,7 @@ export default function App() {
               <button 
                 onClick={() => {
                   scrollPosRef.current = window.scrollY;
-                  setLegalView('terms');
-                  window.scrollTo(0, 0);
+                  handlePageSwitch(setLegalView, 'terms');
                 }} 
                 className="hover:text-brand-bg transition-colors cursor-pointer"
               >

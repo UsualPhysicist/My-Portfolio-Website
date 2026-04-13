@@ -147,6 +147,7 @@ export default function SocialMediaPage({ onBack }: SocialMediaPageProps) {
                     alt={img.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                     <p className="text-white font-bold text-sm">{img.title}</p>
@@ -218,6 +219,7 @@ export default function SocialMediaPage({ onBack }: SocialMediaPageProps) {
                 alt={SOCIAL_MEDIA_DESIGNS[currentIndex].title}
                 className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
                 referrerPolicy="no-referrer"
+                loading="lazy"
               />
               <div className="mt-6 text-center">
                 <h4 className="text-white text-xl font-bold mb-1">{SOCIAL_MEDIA_DESIGNS[currentIndex].title}</h4>
